@@ -1,8 +1,10 @@
+import time
+
 from flask import Flask, request
 
 from document_gpt.helper.conversation import create_conversation
 from document_gpt.helper.twilio_api import send_message
-from document_gpt.helper.utils import transcript_audio
+from document_gpt.helper.utils import transcript_audio, create_string_chunks
 
 from config import config
 
@@ -36,7 +38,13 @@ def twilio():
             print(f'Query - {query}')
             response = create_conversation(query, [])
         print(f'Response - {response}')
-        send_message(sender_id, response)
+        if len(response) > 1600:
+            sentences = create_string_chunks(response, 1500)
+            for s in sentences:
+                send_message(sender_id, s)
+                time.sleep(2)
+        else:
+            send_message(sender_id, response)
         print('Message sent.')
     except Exception as e:
         print(e)
