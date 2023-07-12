@@ -32,3 +32,15 @@ def transcript_audio(media_url: str) -> dict:
             'status': 0,
             'transcript': transcript['text']
         }
+
+def create_string_chunks(string, length):
+    words = string.split()
+    sentences = []
+    temp_string= ''
+    for w in words:
+        if len(temp_string) > length:
+            sentences.append(f'{temp_string}...')
+            temp_string = ''
+        temp_string += f'{w} '
+    sentences.append(temp_string)
+    return sentences
