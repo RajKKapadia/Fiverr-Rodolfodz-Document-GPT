@@ -1,4 +1,5 @@
 import os
+import tempfile
 
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -9,8 +10,10 @@ import pinecone
 
 from config import config
 
-def create_indexes(file_path: str) -> str:
+
+def create_indexes(file: tempfile) -> str:
     try:
+        file_path = file.name
         reader = PdfReader(file_path)
         text = ''
         for page in reader.pages:
@@ -55,6 +58,7 @@ def create_indexes(file_path: str) -> str:
     except Exception as e:
         return e
 
+
 def clear_indexes() -> str:
     try:
         pinecone.init(
@@ -67,4 +71,3 @@ def clear_indexes() -> str:
         return 'Indexes cleared.', None
     except Exception as e:
         return e, None
-    
