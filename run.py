@@ -1,7 +1,11 @@
-from document_gpt.src.main import app
+import gradio as gr
+from fastapi import FastAPI
 
-if __name__ == '__main__':
-    app.run(
-        debug=True
-    )
-    
+from document_gpt.helper.gradio_ui import demo
+from document_gpt.routers.main import router
+
+app = FastAPI()
+
+app = gr.mount_gradio_app(app, demo, path='/gradio')
+
+app.include_router(router)
